@@ -1,0 +1,440 @@
+
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>背單字網頁</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --card: #1f2937;
+      --accent: #38bdf8;
+      --accent-2: #a78bfa;
+      --text: #e5eefb;
+      --sub: #cbd5e1;
+      --good: #86efac;
+      --bad: #fca5a5;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, "Noto Sans TC", "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top, rgba(56, 189, 248, 0.12), transparent 25%),
+        linear-gradient(145deg, #020617 0%, #111827 45%, #172554 100%);
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .panel {
+      background: rgba(17, 24, 39, 0.92);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.35);
+      backdrop-filter: blur(12px);
+    }
+
+    .eyebrow {
+      display: inline-block;
+      color: var(--accent);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(28px, 5vw, 44px);
+      line-height: 1.1;
+    }
+
+    .lead {
+      color: var(--sub);
+      line-height: 1.6;
+      margin: 0 0 16px;
+      font-size: 16px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.12);
+      color: var(--text);
+      font-size: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.16);
+    }
+
+    .mini-card {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.16), rgba(167, 139, 250, 0.16));
+      border-radius: 20px;
+      padding: 18px;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      min-height: 100%;
+    }
+
+    .mini-card h2 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+
+    .mini-card p {
+      color: var(--sub);
+      line-height: 1.5;
+      margin: 0 0 8px;
+      font-size: 14px;
+    }
+
+    .tip {
+      display: block;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(134, 239, 172, 0.08);
+      color: #d1fae5;
+      border: 1px solid rgba(134, 239, 172, 0.18);
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    .form-grid label {
+      display: block;
+      color: #e2e8f0;
+      font-size: 14px;
+      margin-bottom: 0;
+    }
+
+    input,
+    textarea,
+    button {
+      font: inherit;
+      outline: none;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 16px;
+      color: #eef2ff;
+      padding: 14px 16px;
+      margin-top: 8px;
+    }
+
+    button {
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px rgba(56, 189, 248, 0.18);
+    }
+
+    .status-text {
+      color: #cbd5e1;
+      line-height: 1.6;
+      min-height: 24px;
+    }
+
+    .table-wrap {
+      margin-top: 18px;
+      overflow-x: auto;
+      border-radius: 18px;
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      background: rgba(17, 24, 39, 0.96);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+      vertical-align: top;
+    }
+
+    th {
+      background: rgba(30, 41, 59, 0.95);
+      color: #eff6ff;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      position: sticky;
+      top: 0;
+    }
+
+    td {
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .word {
+      font-weight: 800;
+      color: #fff;
+      font-size: 15px;
+    }
+
+    .mean {
+      color: #bfdbfe;
+      font-weight: 600;
+    }
+
+    .example {
+      color: var(--sub);
+      line-height: 1.6;
+    }
+
+    footer {
+      margin-top: 18px;
+      color: var(--sub);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      body { padding: 12px; }
+      .panel { padding: 18px; border-radius: 18px; }
+      .form-grid { gap: 12px; }
+      th, td { padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <article class="panel">
+        <div class="eyebrow">Vocabulary Study</div>
+        <h1>英文單字表</h1>
+        <p class="lead">這是一個簡潔又好看的單字表頁面，適合用來複習每日英文詞彙、做學習筆記或當作課堂展示。</p>
+        <div class="chips">
+          <span class="chip">📘 10 個重點單字</span>
+          <span class="chip">📝 含中文意思與例句</span>
+          <span class="chip">🎯 適合自學與複習</span>
+        </div>
+      </article>
+
+      <aside class="panel mini-card">
+        <h2>使用說明</h2>
+        <p>輸入英文單字後按「取得中文意思」。如果想儲存到 Google Sheet，請部署 GAS Web App，並將 Web App URL 貼到欄位中。</p>
+        <span class="tip">Tip：翻譯結果會自動顯示在下方，按「儲存到 Google Sheet」即可同步到試算表。</span>
+      </aside>
+    </section>
+
+    <section class="panel">
+      <div class="eyebrow">單字查詢與儲存</div>
+      <h2 style="margin: 0 0 8px; font-size: 22px;">背單字系統</h2>
+      <p class="lead" style="margin-bottom: 20px;">輸入英文單字後，系統會自動查詢中文意思；若部署 GAS，還可直接儲存到 Google Sheet。</p>
+
+      <div class="form-grid" style="display:grid; gap:18px;">
+        <label>
+          <strong>英文單字</strong>
+          <input id="wordInput" type="text" placeholder="輸入 word，例如 practice">
+        </label>
+
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+          <button id="translateButton" style="padding:14px 22px;background:linear-gradient(135deg,#38bdf8,#a78bfa);color:#0f172a;font-weight:700;min-width:190px;">取得中文意思</button>
+          <button id="saveButton" style="padding:14px 22px;background:#22c55e;color:#fafafa;font-weight:700;min-width:190px;">儲存到 Google Sheet</button>
+        </div>
+
+        <label>
+          <strong>備註 / 例句</strong>
+          <textarea id="noteInput" rows="3" placeholder="可輸入例句、分類或記憶訣竅"></textarea>
+        </label>
+
+        <label>
+          <strong>GAS Web App URL</strong>
+          <input id="gasUrlInput" type="text" value="https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec">
+        </label>
+
+        <div id="translateStatus" class="status-text"></div>
+      </div>
+
+      <div id="meaningPanel" style="margin-top:24px;padding:20px;border-radius:20px;background:rgba(30,41,59,0.92);border:1px solid rgba(148,163,184,.18);display:none;">
+        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+          <div>
+            <div style="color:#38bdf8;font-size:12px;text-transform:uppercase;letter-spacing:.18em;margin-bottom:8px;">查詢結果</div>
+            <div><strong id="resultWord" style="font-size:24px;letter-spacing:.04em;"></strong></div>
+            <div id="resultMeaning" style="margin-top:10px;color:#c7d2fe;font-size:18px;"></div>
+          </div>
+          <div id="resultNote" style="color:#94a3b8;font-size:14px;max-width:360px;"></div>
+        </div>
+      </div>
+
+      <div style="margin-top:26px;">
+        <div class="eyebrow">本地單字記錄</div>
+        <div class="table-wrap" style="margin-top:12px;">
+          <table>
+            <thead>
+              <tr>
+                <th>英文</th>
+                <th>中文</th>
+                <th>備註</th>
+                <th>時間</th>
+              </tr>
+            </thead>
+            <tbody id="wordTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <footer>已完成背單字網頁。若要儲存至 Google Sheet，請先部署 Apps Script 並將 Web App URL 貼入欄位。</footer>
+  </main>
+
+  <script>
+    const wordInput = document.getElementById('wordInput');
+    const noteInput = document.getElementById('noteInput');
+    const translateStatus = document.getElementById('translateStatus');
+    const translateButton = document.getElementById('translateButton');
+    const saveButton = document.getElementById('saveButton');
+    const gasUrlInput = document.getElementById('gasUrlInput');
+    const meaningPanel = document.getElementById('meaningPanel');
+    const resultWord = document.getElementById('resultWord');
+    const resultMeaning = document.getElementById('resultMeaning');
+    const resultNote = document.getElementById('resultNote');
+    const wordTableBody = document.getElementById('wordTableBody');
+
+    let currentData = { word: '', meaning: '', note: '' };
+
+    function updateResultCard() {
+      if (!currentData.word) {
+        meaningPanel.style.display = 'none';
+        return;
+      }
+      resultWord.textContent = currentData.word;
+      resultMeaning.textContent = currentData.meaning || '找不到中文意思，請改用其他詞彙再查詢。';
+      resultNote.textContent = currentData.note ? '備註：' + currentData.note : '';
+      meaningPanel.style.display = 'block';
+    }
+
+    function addLocalRow(entry) {
+      const tr = document.createElement('tr');
+      const time = new Date().toLocaleString('zh-TW', { hour12: false });
+      tr.innerHTML = `
+        <td class="word">${entry.word}</td>
+        <td class="mean">${entry.meaning}</td>
+        <td class="example">${entry.note || '—'}</td>
+        <td class="example">${time}</td>
+      `;
+      wordTableBody.prepend(tr);
+    }
+
+    function parseChineseText(text) {
+      if (!text) return '';
+      const index = text.search(/[\u4E00-\u9FFF\u3400-\u4DBF\uF900-\uFAFF]/);
+      return index >= 0 ? text.slice(index).trim() : text.trim();
+    }
+
+    async function fetchTranslation(word) {
+      const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=en|zh-TW`;
+      translateStatus.textContent = '正在查詢中文意思...';
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`API 回應 ${response.status}`);
+        const data = await response.json();
+        let translation = data.responseData?.translatedText || '';
+        if (Array.isArray(data.matches) && data.matches.length > 0) {
+          const bestMatch = data.matches.find(item => item.translation && /[\u4E00-\u9FFF]/.test(item.translation));
+          if (bestMatch?.translation) translation = bestMatch.translation;
+        }
+        const meaning = parseChineseText(translation);
+        translateStatus.textContent = meaning ? '翻譯完成，請檢查下方結果。' : '未找到中文意思，請改用其他單字再查詢。';
+        return meaning || '無法取得翻譯';
+      } catch (error) {
+        translateStatus.textContent = '查詢失敗：' + error.message;
+        return '';
+      }
+    }
+
+    async function saveToGas(entry) {
+      const url = gasUrlInput.value.trim();
+      if (!url || url.includes('YOUR_DEPLOYMENT_ID')) {
+        translateStatus.textContent = '請先設定 GAS Web App URL，再進行儲存。';
+        return;
+      }
+      translateStatus.textContent = '儲存中，請稍候...';
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(entry),
+        });
+        const result = await response.json();
+        if (result.status === 'success') {
+          translateStatus.textContent = '已成功儲存到 Google Sheet！';
+        } else {
+          throw new Error(result.message || 'GAS 回傳錯誤');
+        }
+      } catch (error) {
+        translateStatus.textContent = '儲存失敗：' + error.message;
+      }
+    }
+
+    translateButton.addEventListener('click', async () => {
+      const word = wordInput.value.trim();
+      if (!word) {
+        translateStatus.textContent = '請先輸入英文單字。';
+        return;
+      }
+      const meaning = await fetchTranslation(word);
+      currentData = { word, meaning, note: noteInput.value.trim() };
+      updateResultCard();
+    });
+
+    saveButton.addEventListener('click', async () => {
+      const word = wordInput.value.trim();
+      if (!word) {
+        translateStatus.textContent = '請先輸入英文單字。';
+        return;
+      }
+      const meaning = currentData.word === word ? currentData.meaning : await fetchTranslation(word);
+      const entry = { word, meaning, note: noteInput.value.trim(), source: 'web' };
+      addLocalRow(entry);
+      await saveToGas(entry);
+      currentData = entry;
+      updateResultCard();
+    });
+  </script>
+</body>
+</html>
+
